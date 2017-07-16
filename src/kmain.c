@@ -1,6 +1,7 @@
 #include "driver.h"
 
 int main() {
-	write("Hello World", 11);
+	fb_write("Hello World", 11);
+	serial_write("Serial Hello World", 18);
 	return 0;
 }
