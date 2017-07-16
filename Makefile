@@ -1,9 +1,9 @@
 all:
-	cd src && make
+	$(MAKE) -C src
 
 run:
-	cd src && make run
+	$(MAKE) -C src run
 
 clean:
-	cd src && make clean
+	$(MAKE) -C src clean
 	rm -f os.iso *.o
