@@ -17,8 +17,8 @@ loader:						; the loader label (defined as entry point in linker script)
 	mov esp, kernel_stack + KERNEL_STACK_SIZE ; point esp to the start of the
 							; stack (end of memory area)
 							; The assembly code
-	extern sum_of_three	; the function sum_of_three is defined elsewhere
-	call sum_of_three		; call the function, the result will be in eax
+	extern main				; the function sum_of_three is defined elsewhere
+	call main				; call the function, the result will be in eax
 .loop:
 	jmp .loop				; loop forever
 
