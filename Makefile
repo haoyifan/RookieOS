@@ -6,4 +6,4 @@ run:
 
 clean:
 	$(MAKE) -C src clean
-	rm -f os.iso *.o
+	rm -f os.iso *.o *.out
