@@ -24,28 +24,38 @@ void gdt_init() {
 	struct segment_desc gdt[3];
 
 	// null segment
-	gdt[0].base_h = 0;
-	gdt[0].base_l = 0;
-	gdt[0].limit_h = 0;
-	gdt[0].limit_l = 0;
-	gdt[0].attr = 0;
-	gdt[0].attribute = 0;
+	kmemset((void*)gdt, sizeof(struct segment_desc), 0);
 
 	// code segment
-	gdt[1].base_h = (GDT_BASE_CS >> 24);
-	gdt[1].base_l = (GDT_BASE_CS) & 0xffffff;
-	gdt[1].limit_h = (GDT_LIMIT_CS >> 28);
-	gdt[1].limit_l = (GDT_LIMIT_CS) & 0xffff;
-	gdt[1].attr = 0;
-	gdt[1].attribute = 0;
+	init_seg_desc(
+		&gdt[1],
+		GDT_BASE_CS,
+		GDT_LIMIT_CS,
+		GRANULARITY_SET,
+		OPERATION_SIZE_SEGMENT_32_BIT,
+		CODE_SEG_MODE_UNUSED,
+		AVL_AVAILABLE, 
+		SEGMENT_PRESENT, 
+		PRIVILEGE_LEVEL_0,
+		CODE_DATA__DESCRIPTOR,
+		DATA_TYPE_ACCESSED | DATA_TYPE_EXPAND_DOWN | DATA_TYPE_WRITE
+	);
+
 
 	// data segment
-	gdt[2].base_h = (GDT_BASE_DS >> 24);
-	gdt[2].base_l = (GDT_BASE_DS) & 0xffffff;
-	gdt[2].limit_h = (GDT_LIMIT_DS >> 28);
-	gdt[2].limit_l = (GDT_LIMIT_DS) & 0xffff;
-	gdt[2].attr = 0;
-	gdt[2].attribute = 0;
+	init_seg_desc(
+		&gdt[2],
+		GDT_BASE_DS,
+		GDT_LIMIT_DS,
+		GRANULARITY_SET,
+		OPERATION_SIZE_SEGMENT_32_BIT,
+		CODE_SEG_MODE_UNUSED,
+		AVL_AVAILABLE, 
+		SEGMENT_PRESENT, 
+		PRIVILEGE_LEVEL_0,
+		CODE_DATA__DESCRIPTOR,
+		CODE_TYPE_ACCESSED | CODE_TYPE_CONFORMING | CODE_TYPE_READ
+	);
 
 	struct gdt gdt_desc;
 	gdt_desc.address = (unsigned int) gdt;
@@ -56,3 +66,42 @@ void gdt_init() {
 	return;
 }
 
+void kmemset(void *ptr, const size_t sz, const char c) {
+	char *_ptr = (char*)ptr;
+
+	size_t i = 0;
+	for(; i < sz; ++i, ++_ptr) {
+		*_ptr = c;	
+	}
+}
+
+void init_seg_desc(
+		struct segment_desc *descriptor,
+		const int base_addr,
+		const int limit,
+		const char granularity,
+		const char operation_size_segment,
+		const char code_segment,
+		const char avl,
+		const char seg_present,
+		const char privilege,
+		const char desc_type,
+		const char desc_type_bit
+		) {
+
+	descriptor->base_h = (base_addr >> 24);
+	descriptor->base_l = (base_addr & 0xffffff);
+
+	descriptor->limit_h = (limit >> 28);
+	descriptor->limit_l = (limit & 0xffff);
+
+	descriptor->granularity |= granularity;
+	descriptor->op_size |= operation_size_segment;
+	descriptor->code_seg |= code_segment;
+	descriptor->avl |= avl;
+	descriptor->seg_present |= seg_present;
+	descriptor->dpl |= privilege;
+	descriptor->descriptor_type |= desc_type;
+	descriptor->type |= desc_type_bit;
+
+}

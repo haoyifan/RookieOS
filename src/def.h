@@ -64,6 +64,7 @@
 #define OPERATION_SIZE_SEGMENT_32_BIT 0x1
 
 /* 64-bit code segment (IA-32e mode only) */
+#define CODE_SEG_MODE_UNUSED 0x0 
 #define CODE_SEG_MODE_COMPATIBLE 0x0 
 #define CODE_SEG_MODE_64 0x1 
 
@@ -151,4 +152,5 @@ struct gdt {
 	unsigned short size;
 } __attribute__((packed));
 
+typedef unsigned long size_t;
 #endif
