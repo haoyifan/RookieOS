@@ -22,4 +22,17 @@ void fb_move_cursor(unsigned short pos);
  */
 void fb_write_cell(unsigned int i, char c, unsigned char fg, unsigned char bg);
 
+/** gdt_init:
+ * Initialize the code segment and data segment of the segment
+ * descriptor
+ */
+void gdt_init();
+
+/** init_seg_desc:
+ * initialize a specific code descriptor
+ *
+ */
+void init_seg_desc();
+	
+
 #endif
