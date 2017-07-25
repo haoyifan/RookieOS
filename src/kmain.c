@@ -1,7 +1,10 @@
 #include "driver.h"
 
 int main() {
-	fb_write("Hello World", 11);
-	serial_write("Serial Hello World", 18);
+	const char str[] = "Hello world";
+	fb_write(str, sizeof(str));
+	serial_write(str, sizeof(str));
+	gdt_init();
+
 	return 0;
 }

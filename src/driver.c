@@ -25,7 +25,6 @@ int serial_write(const char *buf, const unsigned int len) {
 	for(; i < len; ++i) {
 		while(!serial_is_transmit_fifo_empty(SERIAL_COM1_BASE));
 
-		// fb_write_cell(80 + 2 * i, *(buf + i), FB_WHITE, FB_BLACK);	
 		serial_transmit_data(SERIAL_COM1_BASE, *(buf + i));
 	}
 
